@@ -5,4 +5,9 @@ logging:
   level:
     org.springframework: DEBUG
 
+spring:
+  messages:
+    basename: messages
+    encoding: UTF-8
+
 
