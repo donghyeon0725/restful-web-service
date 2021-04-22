@@ -4,17 +4,11 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
+import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.web.bind.annotation.*;
+
+
 import java.util.List;
 
 @RestController
@@ -44,7 +38,6 @@ public class AdminUserController {
     /**
      * URI를 통한 버전 관리
      * */
-    // GET /admin/users/1 or /admin/v1/users/10
     @GetMapping("/v1/users/{id}")
     public MappingJacksonValue retrieveUserV1(@PathVariable int id) {
         User user = service.findOne(id);
@@ -65,7 +58,6 @@ public class AdminUserController {
         return mapping;
     }
 
-    // GET /admin/users/1 or /admin/v1/users/10
     @GetMapping("/v2/users/{id}")
     public MappingJacksonValue retrieveUserV2(@PathVariable int id) {
         User user = service.findOne(id);
@@ -140,7 +132,6 @@ public class AdminUserController {
 
         return mapping;
     }
-
 
 
     /**

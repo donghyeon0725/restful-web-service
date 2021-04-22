@@ -34,6 +34,10 @@ public class RestfulWebServiceApplication {
         return localeResolver;
     }
 
+    /**
+     * 언어 관리를 위해 사용하는 MessageSource 클래스에서
+     * properties 파일이 아닌, yml 파일을 사용할 수 있도록 하는 설정
+     * */
     @Bean("messageSource")
     public MessageSource messageSource(
             @Value("${spring.messages.basename}") String basename,
@@ -48,6 +52,9 @@ public class RestfulWebServiceApplication {
         return ms;
     }
 
+    /**
+     * yml 설정을 위해 필요. 위에서 사용
+     * */
     class YamlMessageSource extends ResourceBundleMessageSource {
         @Override
         protected ResourceBundle doGetBundle(String basename, Locale locale) throws MissingResourceException {

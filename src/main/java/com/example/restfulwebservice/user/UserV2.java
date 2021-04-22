@@ -9,6 +9,11 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+
+/**
+ * 버전 관리의 한 방법,
+ * 부모 클래스에 기본 생성자 필요
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

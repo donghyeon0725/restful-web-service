@@ -37,7 +37,9 @@ public class UserController {
         return service.findAll();
     }
 
-    // GET /users/1 or users/10
+    /**
+     * hateoas 를 사용한 restful api 개발
+     * */
     @GetMapping("/users/{id}")
     public EntityModel<User> retrieveUser(@PathVariable int id) {
         User user = service.findOne(id);
@@ -79,7 +81,9 @@ public class UserController {
         return model;
     }
 
-    @Validated
+    /**
+     * validation check => User에 필요한 태그가 있어야 합니다.
+     * */
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User savedUser = service.save(user);
@@ -101,6 +105,9 @@ public class UserController {
         }
     }
 
+    /**
+     * 응답 해더를 설정하여 보내는 방법
+     * */
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User user) {
         User modifiedUser = service.updateById(id, user);

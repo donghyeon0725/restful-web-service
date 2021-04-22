@@ -37,8 +37,11 @@ public class HelloWorldController {
         return new HelloWorldBean(String.format("Hello world, %s", name));
     }
 
+    /**
+     * 헤더에 설정된 언어 값에 따라 다르게 응답
+     * */
     @GetMapping(path = "/hello-world-internationalized")
-    public String helloWorldInternationalized(@RequestHeader(name="Accept-Language", required = false) Locale locale) { //
+    public String helloWorldInternationalized(@RequestHeader(name="Accept-Language", required = false) Locale locale) {
         System.out.println(locale);
         return messageSource.getMessage("greeting.message", null, locale);
     }
