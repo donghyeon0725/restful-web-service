@@ -134,6 +134,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 스프링 시큐리티를 jwt 방식으로 인증하기 위함 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+
 
     </dependencies>
 
