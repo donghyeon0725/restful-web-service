@@ -1,15 +1,18 @@
 package com.example.restfulwebservice.user;
 
+import com.example.restfulwebservice.security.JwtTokenProvider;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,13 +53,37 @@ public class UserJpaController {
      }
      */
 
+    /**
+     * 토큰 인증을 위해 필요 =
+     * */
+    private PasswordEncoder passwordEncoder;
+    private JwtTokenProvider jwtTokenProvider;
+
+
     private UserRepository userRepository;
 
     private PostRepository postRepository;
 
-    public UserJpaController(UserRepository userRepository, PostRepository postRepository) {
+    public UserJpaController(UserRepository userRepository,
+                             PostRepository postRepository,
+                             PasswordEncoder passwordEncoder,
+                             JwtTokenProvider jwtTokenProvider
+                            ) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+
+    @PostMapping("/login")
+    public String login(@RequestBody User user) {
+        User member = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+        if (!passwordEncoder.matches(user.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
     }
 
     @GetMapping("/users")
@@ -97,7 +124,17 @@ public class UserJpaController {
 
     @PostMapping("/users")
     public  ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        User savedUSer = userRepository.save(user);
+    try {
+
+
+        User entity_user = User.builder()
+                .email(user.getEmail())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
+                .build();
+
+        User savedUSer = userRepository.save(entity_user);
+
 
         HttpHeaders header = new HttpHeaders();
         header.setLocation(
@@ -108,6 +145,10 @@ public class UserJpaController {
         );
 
         return new ResponseEntity(savedUSer, header, HttpStatus.ACCEPTED);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
     }
 
     @GetMapping("/users/{id}/posts")
